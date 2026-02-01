@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Dashboard - Users</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 1. CORE THEME VARIABLES --- */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #8d99ae;
+            --bg-body: #f5f7fb;
+            --white: #ffffff;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --border: #d2d2d2;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+
+        body { background-color: var(--bg-body); color: var(--dark); overflow-x: hidden; }
+
+        .container { display: flex; min-height: 100vh; }
+
+        /* --- 2. SIDEBAR STYLES (Same as your provided code) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #000000; /* Black Sidebar */
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 20px;
+            text-align: center;
+            height: var(--header-height);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo h2 { color: var(--primary); font-size: 1.5rem; }
+        .logo span { color: var(--warning); }
+
+        .nav-links { padding: 20px 0; list-style: none; }
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: var(--gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(67, 97, 238, 0.1);
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        .nav-links a i { margin-right: 12px; font-size: 1.1rem; width: 25px; }
+
+        /* --- 3. MAIN CONTENT & HEADER --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        header {
+            height: var(--header-height);
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-body);
+            border-radius: 30px;
+            padding: 8px 20px;
+            width: 300px;
+        }
+        .search-box input { border: none; background: transparent; outline: none; margin-left: 10px; width: 100%; }
+
+        /* --- 4. DATA SECTION (The Load Button functionality) --- */
+        .content { padding: 30px; }
+
+        .welcome-section {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .action-card {
+            background: var(--white);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+
+        .btn-load {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-load:hover {
+            background: var(--secondary);
+            transform: translateY(-2px);
+        }
+
+        /* --- 5. TABLE STYLES --- */
+        .table-container {
+            margin-top: 30px;
+            display: none; /* Initially Hidden */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+
+        table th {
+            background-color: #f8faff;
+            color: var(--dark);
+            text-align: left;
+            padding: 15px;
+            border-bottom: 2px solid var(--bg-body);
+        }
+
+        table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--bg-body);
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        table tr:hover { background-color: #fcfcff; }
+
+        .status-pill {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #e1f7ed;
+            color: #10b981;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Dash<span>Board</span></h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="indexxing.html"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="userdata.html" class="active"><i class="fas fa-users"></i> Users</a></li>
+               
+                <li><a href="messege.html"><i class="fas fa-envelope"></i> Messages</a></li>
+                <li><a href="dummy.html"><i class="fas fa-envelope"></i>Dummy Data</a></li>
+                
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+            </ul>
+        </aside>
+
+        <div class="main-content">
+            <header>
+                <div class="search-box">
+                    <i class="fas fa-search" style="color: var(--gray);"></i>
+                    <input type="text" placeholder="Search users...">
+                </div>
+                <div class="user-profile" style="display: flex; align-items: center; gap: 10px;">
+                    <img src="data:image/jpeg;base64,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" alt="User" style="width: 40px; border-radius: 50%;">
+                    <span style="font-weight: 600;">M.Sufyan</span>
+                </div>
+            </header>
+
+            <div class="content">
+                <section class="welcome-section">
+                    <div class="welcome-text">
+                        <h1>User Management</h1>
+                        <p>View and manage all registered customers in the system.</p>
+                    </div>
+                </section>
+
+                <div class="action-card">
+                    <h2 style="margin-bottom: 15px;">Customer Database</h2>
+                    <p style="color: var(--gray); margin-bottom: 20px;">Click the button below to fetch the latest user records from the database.</p>
+                    <button class="btn-load" onclick="loadData()">
+                        <i class="fas fa-download"></i> <span id="btnText">Load Customer Data</span>
+                    </button>
+                </div>
+
+                <div class="table-container" id="userTable">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Full Name</th>
+                                <th>Email Address</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#USR-001</td>
+                                <td style="color: var(--dark); font-weight: 500;">Ali Khan</td>
+                                <td>ali.khan@email.com</td>
+                                <td>Karachi, PK</td>
+                                <td><span class="status-pill">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>#USR-002</td>
+                                <td style="color: var(--dark); font-weight: 500;">Sarah Ahmed</td>
+                                <td>sarah.a@email.com</td>
+                                <td>Lahore, PK</td>
+                                <td><span class="status-pill">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>#USR-003</td>
+                                <td style="color: var(--dark); font-weight: 500;">Zeeshan Malik</td>
+                                <td>zee.malik@email.com</td>
+                                <td>Islamabad, PK</td>
+                                <td><span class="status-pill">Active</span></td>
+                            </tr>
+                            <tr>
+                                <td>#USR-004</td>
+                                <td style="color: var(--dark); font-weight: 500;">Fatima Bilal</td>
+                                <td>fatima.b@email.com</td>
+                                <td>Peshawar, PK</td>
+                                <td><span class="status-pill">Active</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadData() {
+            var table = document.getElementById("userTable");
+            var btnText = document.getElementById("btnText");
+
+            if (table.style.display === "none" || table.style.display === "") {
+                table.style.display = "block";
+                btnText.innerText = "Hide Customer Data";
+            } else {
+                table.style.display = "none";
+                btnText.innerText = "Load Customer Data";
+            }
+        }
+    </script>
+</body>
+</html>

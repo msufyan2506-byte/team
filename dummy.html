@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Black Dashboard - Product Inventory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+
+    <style>
+       
+ /* --- 1. CORE THEME VARIABLES (From New Theme) --- */
+        :root {
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --success: #4cc9f0;
+            --warning: #f72585;
+            --dark: #2b2d42;
+            --light: #f8f9fa;
+            --gray: #8d99ae;
+            --bg-body: #f5f7fb;
+            --white: #ffffff;
+            --sidebar-width: 250px;
+            --header-height: 70px;
+            --border: #d2d2d2;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--dark);
+            overflow-x: hidden;
+        }
+
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* --- 2. SIDEBAR STYLES --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--white);
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+            background-color: #000000;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+        }
+
+        .logo {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            height: var(--header-height);
+            border: 1px solid #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .logo h2 { color: var(--primary); font-size: 1.5rem; }
+        .logo span { color: var(--warning); }
+
+        .nav-links { padding: 20px 0; list-style: none; }
+        .nav-links li { margin-bottom: 5px; }
+        
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: var(--gray);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            background-color: rgba(67, 97, 238, 0.05);
+            color: var(--primary);
+            border-left: 4px solid var(--primary);
+        }
+
+        .nav-links a i { margin-right: 12px; font-size: 1.2rem; width: 25px; text-align: center; }
+        /* --- 3. MAIN CONTENT --- */
+        .main {
+            position: absolute;
+            width: calc(100% - 300px);
+            left: 300px;
+            min-height: 100vh;
+            background: var(--light-bg);
+            transition: 0.5s;
+        }
+        .main.active { width: calc(100% - 80px); left: 80px; }
+
+        .topbar {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            background: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .toggle {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--dark-bg);
+        }
+
+        /* --- 4. DATA SECTION STYLES --- */
+        .content-body { padding: 30px; }
+
+        .welcome-card {
+            background: linear-gradient(135deg, var(--dark-bg), #222);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .welcome-card h2 { font-weight: 600; font-size: 24px; color: var(--primary); }
+        .welcome-card p { opacity: 0.8; font-size: 14px; }
+
+        .action-button {
+            padding: 12px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+        .action-button:hover { background: var(--secondary); transform: translateY(-2px); }
+        .action-button.close-mode { background: var(--danger); box-shadow: 0 4px 15px rgba(239, 35, 60, 0.3); }
+
+        /* --- 5. TABLE STYLES --- */
+        .table-container {
+            background: var(--white);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            display: none; /* Initially Hidden */
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .styled-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        .styled-table thead tr {
+            background-color: #f8faff;
+            color: var(--dark-bg);
+            text-align: left;
+            border-bottom: 2px solid var(--light-bg);
+        }
+
+        .styled-table th, .styled-table td { padding: 15px; }
+
+        .styled-table tbody tr { border-bottom: 1px solid var(--border); transition: 0.2s; }
+        .styled-table tbody tr:hover { background-color: #fcfcff; }
+
+        .product-img { border-radius: 8px; object-fit: cover; background: #eee; border: 1px solid var(--border); }
+        
+        .price-tag { font-weight: 700; color: #10b981; }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .navigation { left: -300px; }
+            .navigation.active { width: 300px; left: 0; }
+            .main { width: 100%; left: 0; }
+            .main.active { left: 300px; }
+        }
+
+
+
+
+        /* --- Updated CSS for Sidebar --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: #1a1d20; /* Slightly lighter than pure black for depth */
+    position: fixed;
+    height: 100vh;
+    z-index: 100;
+    transition: all 0.5s ease;
+    left: 0;
+}
+
+/* Jab sidebar hide ho */
+.sidebar.hide {
+    left: -var(--sidebar-width);
+}
+
+.main {
+    position: absolute;
+    width: calc(100% - var(--sidebar-width));
+    left: var(--sidebar-width);
+    min-height: 100vh;
+    background: var(--bg-body);
+    transition: all 0.5s ease;
+}
+
+/* Jab sidebar hide ho toh main content full width ho jaye */
+.main.full-width {
+    width: 100%;
+    left: 0;
+}
+
+.nav-links a {
+    display: flex;
+    align-items: center;
+    padding: 15px 25px;
+    color: #abb2bf; /* Light gray text */
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary);
+    border-left: 4px solid var(--primary);
+}
+
+/* Responsive Fix */
+@media (max-width: 768px) {
+    .sidebar { left: -var(--sidebar-width); }
+    .sidebar.active { left: 0; }
+    .main { width: 100%; left: 0; }
+}
+
+
+
+ /* --- 3. MAIN CONTENT & HEADER --- */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            width: calc(100% - var(--sidebar-width));
+        }
+
+        header {
+            height: var(--header-height);
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: var(--bg-body);
+            border-radius: 30px;
+            padding: 10px 20px;
+            width: 300px;
+        }
+        .search-box input { border: none; background: transparent; outline: none; margin-left: 10px; width: 100%; }
+        
+        .user-info { display: flex; align-items: center; gap: 20px; }
+        .user-profile { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .user-profile img { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+   <div class="container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Dash<span>Board</span></h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="indexxing.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="userdata.html"><i class="fas fa-users"></i> Users</a></li>
+                
+                <li><a href="messege.html"><i class="fas fa-envelope"></i> Messages <span class="badge-count"></span></a></li>
+                
+                <li><a href="dummy.html"><i class="fas fa-shopping-cart"></i> Dummy Data</a></li>
+                <!-- <li><a href="#"><i class="fas fa-box"></i> Products</a></li> -->
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+            </ul>
+        </aside>
+<script>
+    function toggleSidebar() {
+        // Dono classes ko toggle karna zaroori hai
+        const sidebar = document.querySelector('.sidebar');
+        const main = document.querySelector('.main');
+        
+        sidebar.classList.toggle('hide');
+        main.classList.toggle('full-width');
+    }
+
+    // Baaki aapka toggleData function yahan niche rahega...
+</script>
+        <div class="main-content">
+            <header>
+                <div class="search-box">
+                    <i class="fas fa-search" style="color: var(--gray);"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-info">
+                    <div class="user-profile">
+                        <img src="https://img.freepik.com/free-photo/close-up-portrait-handsome-smiling-young-man-white-t-shirt-blurry-outdoor-nature_176420-6305.jpg?semt=ais_hybrid&w=740&q=80" alt="User">
+                        <span style="font-weight: 600;">M.sufyan</span>
+                    </div>
+                </div>
+            </header>
+
+            <div class="content-body">
+                <div class="welcome-card">
+                    <div>
+                        <h2>Inventory API Data</h2>
+                        <p>Fetch real-time product information from DummyJSON API.</p>
+                    </div>
+                    <button id="dataBtn" class="action-button" onclick="toggleData()">
+                        <i class="fas fa-sync-alt"></i> &nbsp;Load Product Data
+                    </button>
+                </div>
+
+                <div class="table-container" id="tableBox">
+                    <table class="styled-table" id="myTable">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Product Details</th>
+                                <th>Price</th>
+                                <th>Category</th>
+                                <th>Image</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    
+        <script>
+    // 1. Sidebar Toggle - Full Solid Logic
+    function toggleSidebar() {
+        const sidebar = document.querySelector('.sidebar');
+        const main = document.querySelector('.main');
+        
+        if (sidebar.classList.contains('hide-sidebar')) {
+            sidebar.classList.remove('hide-sidebar');
+            main.classList.remove('expand-main');
+        } else {
+            sidebar.classList.add('hide-sidebar');
+            main.classList.add('expand-main');
+        }
+    }
+
+    // 2. Load Data - Fixed "Gayab Hone Wala" Masla
+    function toggleData() {
+        const tableBox = document.getElementById("tableBox");
+        const btn = document.getElementById("dataBtn");
+        const tbody = document.getElementById("tableBody");
+
+        // Step A: Check if Table is currently Hidden
+        const isHidden = (window.getComputedStyle(tableBox).display === "none");
+
+        if (isHidden) {
+            // TABLE SHOW KARO
+            tableBox.style.display = "block";
+            btn.innerHTML = '<i class="fas fa-times"></i> &nbsp;Close Data';
+            btn.style.backgroundColor = "#ef233c"; // Red for Close
+            
+            // Loading message
+            tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; padding: 40px;'><i class='fas fa-spinner fa-spin'></i> Loading for M. Sufyan...</td></tr>";
+
+            // API Fetch
+            fetch("https://dummyjson.com/products?limit=10")
+            .then(res => res.json())
+            .then(data => {
+                tbody.innerHTML = ""; // Clear loader
+                data.products.forEach(item => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>#${item.id}</td>
+                        <td>
+                            <div style="font-weight:600;">${item.title}</div>
+                            <div style="font-size:11px; color:#8d99ae;">${item.brand}</div>
+                        </td>
+                        <td><span class="price-tag">$${item.price}</span></td>
+                        <td><span style="background:#eef2ff; color:#4361ee; padding:4px 10px; border-radius:15px; font-size:12px;">${item.category}</span></td>
+                        <td><img src="${item.thumbnail}" width="45" height="45" class="product-img"></td>
+                    </tr>`;
+                });
+            })
+            .catch(err => {
+                tbody.innerHTML = "<tr><td colspan='5' style='text-align:center; color:red;'>Error Loading Data!</td></tr>";
+            });
+
+        } else {
+            // TABLE HIDE KARO
+            tableBox.style.display = "none";
+            btn.innerHTML = '<i class="fas fa-sync-alt"></i> &nbsp;Load Product Data';
+            btn.style.backgroundColor = "#4361ee"; // Original Blue
+            tbody.innerHTML = ""; // Clear data
+        }
+    }
+</script>
+
+</body>
+</html>

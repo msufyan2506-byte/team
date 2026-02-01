@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Dashboard</title>
+    <link rel="stylesheet" href="index.html">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="Syle.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Dash<span>Board</span></h2>
+            </div>
+           <ul class="nav-links">
+                <li><a href="indexxing.html" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="userdata.html"><i class="fas fa-users"></i> Users</a></li>
+                
+                <li><a href="messege.html"><i class="fas fa-envelope"></i> Messages <span class="badge-count"></span></a></li>
+                
+                <li><a href="dummy.html"><i class="fas fa-shopping-cart"></i> Dummy Data</a></li>
+                <!-- <li><a href="#"><i class="fas fa-box"></i> Products</a></li> -->
+                <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+                <li><a href="#"><i class="fas fa-question-circle"></i> Help</a></li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <header>
+                <div class="menu-toggle">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search...">
+                </div>
+                <div class="user-info">
+                    <div class="notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count">3</span>
+                    </div>
+                    <div class="user-profile">
+                        <img src="image.png" alt="User">
+                        <span>Faraz Ahmed</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Welcome Section -->
+                <section class="welcome-section">
+                    <div class="welcome-text">
+                        <h1>Welcome to our Dashboard</h1>
+                        <p>Here's what's happening with your business today.</p>
+                    </div>
+                    <button id="refreshBtn" class="btn" style="background: rgba(255,255,255,0.2); border: none; color: white; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-weight: 500;">
+                        <i class="fas fa-sync-alt"></i> Refresh Data
+                    </button>
+                </section>
+
+                <!-- Stats Cards -->
+                <div class="stats-cards">
+                    <div class="card card-1">
+                        <div class="card-header">
+                            <h3 class="card-title">Total Revenue</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">$24,580</div>
+                        <div class="card-change positive">
+                            <i class="fas fa-arrow-up"></i> 12.5% from last month
+                        </div>
+                    </div>
+                    <div class="card card-2">
+                        <div class="card-header">
+                            <h3 class="card-title">New Customers</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">1,248</div>
+                        <div class="card-change positive">
+                            <i class="fas fa-arrow-up"></i> 5.2% from last month
+                        </div>
+                    </div>
+                    <div class="card card-3">
+                        <div class="card-header">
+                            <h3 class="card-title">Orders</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-shopping-cart"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">542</div>
+                        <div class="card-change negative">
+                            <i class="fas fa-arrow-down"></i> 2.1% from last month
+                        </div>
+                    </div>
+                    <!-- <div class="card card-4">
+                        <div class="card-header">
+                            <h3 class="card-title">Growth</h3>
+                            <div class="card-icon">
+                                <i class="fas fa-chart-line"></i>
+                            </div>
+                        </div>
+                        <div class="card-value">+18.2%</div>
+                        <div class="card-change positive">
+                            <i class="fas fa-arrow-up"></i> 7.3% from last month
+                        </div>
+                    </div> -->
+                </div>
+
+                <!-- Charts -->
+                <div class="charts-container">
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Revenue Overview</h3>
+                            <select id="chartPeriod" style="padding: 8px 15px; border-radius: 8px; border: 1px solid var(--border); background-color: white; color: var(--dark);">
+                                <option value="week">This Week</option>
+                                <option value="month" selected>This Month</option>
+                                <option value="quarter">This Quarter</option>
+                                <option value="year">This Year</option>
+                            </select>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="revenueChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="chart-box">
+                        <div class="chart-header">
+                            <h3 class="chart-title">Traffic Sources</h3>
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="trafficChart">95.71%</canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Orders -->
+                <div class="recent-orders">
+                    <h3 class="chart-title">Recent Orders</h3>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Order ID</th>
+                                    <th>Customer</th>
+                                    <th>Date</th>
+                                    <th>Amount</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ordersTable">
+                                <!-- Orders will be populated by JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Footer -->
+                <div class="footer">
+                    <p>&copy; 2026 Dashboard. All rights reserved. | Designed with <i class="fas fa-heart" style="color: #f72585;"></i> for modern businesses</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="Scripte.js"></script>
+</body>
+</html>
